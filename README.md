@@ -1,76 +1,68 @@
-# Inspiration
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-What inspired us was the relatively bad experiences we had when trying to find transcriptions for podcasts we regularly listened to. That got us thinking, if we are having trouble finding transcriptions how are people that are deaf or hard of hearing even listening or consuming this form of media? With all of the available tools we wondered how and why there was no cost-effective and user friendly solution to make podcasts accessible to all.
+## Available Scripts
 
-# What it does
+In the project directory, you can run:
 
-Provide a rich podcast experience for deaf and hard of hearing people (and everyone else too) by offering an automated, on-demand transcription and annotation service for audio files. You can read along or learn more while listening or skimming to your favorite parts of any podcasts.
+### `yarn start`
 
-# How we built it
+Runs the app in the development mode.<br />
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-We built it using these technologies
+The page will reload if you make edits.<br />
+You will also see any lint errors in the console.
 
-## Api:
+### `yarn test`
 
-Google Cloud Natural Language
+Launches the test runner in the interactive watch mode.<br />
+See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-Google Cloud Speech-to-Text
+### `yarn build`
 
-Wikipedia
+Builds the app for production to the `build` folder.<br />
+It correctly bundles React in production mode and optimizes the build for the best performance.
 
-## Cache Database:
+The build is minified and the filenames include the hashes.<br />
+Your app is ready to be deployed!
 
-firebase realtime database
+See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-## Development:
+### `yarn eject`
 
-Express.js Prettier
+**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
 
-Swagger Eslint
+If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-React hooks Node.js
+Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
 
-Google cloud platform
+You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
 
-Github
+## Learn More
 
-Figma
+You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-Typescript
+To learn React, check out the [React documentation](https://reactjs.org/).
 
-# Challenges we ran into
+### Code Splitting
 
-We ran into time constraint challenges and hurdles to run many APIs in a series to achieve a presentable final and deliverable result. We also ran into scope challenges, wanting to accomplish so much in such a small amount of time.
+This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
 
-# Accomplishments that we're proud of
+### Analyzing the Bundle Size
 
-We are proud of having delivered a functional demo with a full backend, working database, and a product we are proud of. We made something we did not think possible in less than 20 hours!
+This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
 
-# What we learned
+### Making a Progressive Web App
 
-We learned to master the art of running APIs in series and tackling many implementation challenges in attempting to both deliver an optimal product as well as an efficient one.
+This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
 
-# What's next for hear: podcasts made accessible
+### Advanced Configuration
 
-We would like to integrate live transcription, language translation as well as build community and connecting people
+This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
 
-## Built With
+### Deployment
 
-react-hook  
-react  
-react-native  
-google-web-speech-api  
-natural-language-processing  
-google-cloud  
-figma  
-ai-applied-sentiment-analysis  
-firebase  
-futef-wikipedia-api  
-firebase-realtime-database  
-express.js  
-swagger  
-prettier  
-eslint  
-node.js  
-github  
-typescript
+This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
+
+### `yarn build` fails to minify
+
+This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
