@@ -8,7 +8,7 @@
     "ajv": "6.8.1",
     "babel-loader": "8.0.5",
     "chart.js": "^2.7.3",
-    "firebase": "5.8.2",
+    "firebase": "7.7.0",
     "fuse.js": "3.4.4",
     "lodash": "4.17.11",
     "mauerwerk": "2.0.2",
