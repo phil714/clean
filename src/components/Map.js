@@ -1,13 +1,37 @@
-import React, { Component } from 'react';
+import React, { Component, useState, useEffect } from 'react';
 import ReactMapboxGl, { Marker } from 'react-mapbox-gl';
 import styled from 'styled-components';
-
+import firebase from 'firebase';
 const ReactMapboxGlMap = ReactMapboxGl({
   accessToken:
     'pk.eyJ1Ijoic2FtdWVsdHNvIiwiYSI6ImNrNWs3Z2s3YjBiN3Mza241MTkweDNsemEifQ.HAKopF1Q8laHm4hK6NR51A'
 });
 
+firebase.initializeApp({
+  apiKey: "AIzaSyAjyJ-T2RiCOJSFBHEDN3kpBQT3wM39XqY",
+  authDomain: "clean-d5b63.firebaseapp.com",
+  databaseURL: "https://clean-d5b63.firebaseio.com",
+  projectId: "clean-d5b63",
+  storageBucket: "clean-d5b63.appspot.com",
+  messagingSenderId: "760378273796",
+  appId: "1:760378273796:web:25c6a75c3fdafbabf98551"
+});
+const firestore = firebase.firestore();
+
 export const Map = () => {
+  const [data, setData] = useState([]);
+  useEffect(()=>{
+    firestore
+    .collection('database')
+    .doc('app')
+    .onSnapshot(doc =>{
+      const newData = doc.data();
+      if(newData){
+        setData(newData.sensor);
+      }
+    })
+  },[])
+  console.log(data);
   return (
     <ReactMapboxGlMap
       style="mapbox://styles/mapbox/streets-v11"
