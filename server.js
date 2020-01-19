@@ -2,7 +2,7 @@ const SerialPort = require('serialport');
 const Readline = require('@serialport/parser-readline');
 const firebase = require('firebase');
 const port = new SerialPort('COM3', { baudRate: 115200 });
-const parser = port.pipe(new Readline({ delimiter: '\n' }));
+const parser = port.pipe(new Readline({ delimiter: '\r\n' }));
 
 firebase.initializeApp({
     apiKey: "AIzaSyAjyJ-T2RiCOJSFBHEDN3kpBQT3wM39XqY",
@@ -15,19 +15,24 @@ firebase.initializeApp({
   });
   const firestore = firebase.firestore();
 const arrayData = [];  
+const errorLimit = 20;
 // Read the port data
 port.on("open", () => {
   console.log('serial port open');
 });
 parser.on('data', data =>{
-arrayData.unshift(data);
-  console.log('got word from arduino:', data);
-  console.log(' data: ', data);
-  firestore
-  .collection("database")
-  .doc("app")
-  .update({
-    sensor: arrayData
-  });
+    if(data< errorLimit){
+        arrayData.unshift(data);
+          console.log('got word from arduino:', data);
+          console.log(' data: ', data);
+          firestore
+          .collection("database")
+          .doc("app")
+          .update({
+            sensor: arrayData
+          });
+    }else{
+        console.log('Error: ',data)
+    }
 
 });
