@@ -1,10 +1,41 @@
 import React, { Component, useState, useEffect } from 'react';
+import _ from 'lodash';
+import { Line } from 'react-chartjs-2';
 import ReactMapboxGl, { Marker } from 'react-mapbox-gl';
 import styled from 'styled-components';
 import firebase from 'firebase';
 import tinygradient from 'tinygradient';
+import Dialog from '@material-ui/core/Dialog';
 
 import mobilierUrbainGP from '../mobilierurbaingp.json';
+
+const THRASH_SIZE = 16; // cm;
+
+const data = {
+    datasets: [
+      {
+        label: 'Thrash level over time',
+        fill: false,
+        lineTension: 0.1,
+        backgroundColor: 'rgba(248,50,47,0.4)',
+        borderColor: 'rgba(248,50,47,1)',
+        borderCapStyle: 'butt',
+        borderDash: [],
+        borderDashOffset: 0.0,
+        borderJoinStyle: 'miter',
+        pointBorderColor: 'rgba(248,50,47,1)',
+        pointBackgroundColor: '#fff',
+        pointBorderWidth: 1,
+        pointHoverRadius: 0,
+        pointHoverBackgroundColor: 'rgba(248,50,47,1)',
+        pointHoverBorderColor: 'rgba(220,220,220,1)',
+        pointHoverBorderWidth: 2,
+        pointRadius: 1,
+        pointHitRadius: 1
+      }
+    ]
+  };
+
 
 const ReactMapboxGlMap = ReactMapboxGl({
   accessToken:
@@ -26,7 +57,7 @@ const POLY_LONG = -73.613097;
 const POLY_LAT = 45.505181;
 const BOX_SIZE = 0.015;
 
-var colorStops = [' #f56565', ' #ECC94B', ' #48BB78'];
+var colorStops = [' #48BB78', ' #ECC94B', ' #f56565'];
 
 var gradient = tinygradient(colorStops);
 var colors = gradient.rgb(101);
@@ -34,6 +65,10 @@ var colors = gradient.rgb(101);
 export const Map = () => {
   const [polyTrashData, setPolyTrashData] = useState([]);
   const [montrealTrashData, setMontrealTrashData] = useState([]);
+  const [open, setOpen] = useState(false);
+
+  const handleClose = () => setOpen(false);
+  const handleOpen = () => setOpen(true);
 
   useEffect(() => {
     firestore
@@ -41,14 +76,15 @@ export const Map = () => {
       .doc('app')
       .onSnapshot(doc => {
         const newData = doc.data();
+        const thrashData = _.filter(newData.sensor, data => data < 400);
+
         if (newData) {
-          setPolyTrashData(newData.sensor);
+          setPolyTrashData(thrashData);
         }
       });
   }, []);
 
   useEffect(() => {
-    console.log('mobilierUrbainGP', mobilierUrbainGP);
     const newMontrealTrashData = mobilierUrbainGP.features
       .filter(feature => feature.properties.Element === 'POU')
       .filter(feature => {
@@ -66,13 +102,34 @@ export const Map = () => {
         ...feature.properties,
         fullness: Math.floor(Math.random() * 101)
       }));
-    console.log('newMontrealTrashData', newMontrealTrashData);
 
     setMontrealTrashData(newMontrealTrashData);
   }, []);
 
-  // console.log(data);
+  const labels = [];
+  for(let i = 0; i < 300; i++) {
+      labels.push(i);
+  }   
+
+  data.labels = labels;  
+  
+  const currentHeight = polyTrashData[0];
+  console.log('currentHeight', currentHeight, 'cm');
+
+  const last5minData = _.map(polyTrashData.slice(0, 299), d => {
+      return (THRASH_SIZE - d)/THRASH_SIZE;
+  })
+
+  data.datasets[0].data = last5minData;
+
+  const currentPercentage = Math.max(0, Math.round(last5minData[0]*100));
+
   return (
+    <>
+    <Dialog onClose={handleClose} open={open}>
+      <Line data={data} />
+      <Percentage>{`Current percentage: ${currentPercentage} %`}</Percentage>
+    </Dialog>
     <ReactMapboxGlMap
       style="mapbox://styles/mapbox/streets-v11"
       containerStyle={{
@@ -83,15 +140,17 @@ export const Map = () => {
       zoom={[13]}
     >
       <TrashMarker
+        handleOpen={handleOpen}
         coordinates={[POLY_LONG, POLY_LAT]}
-        color={colors[23]}
-        text="23%"
+        color={colors[currentPercentage]}
+        text={`${currentPercentage}%`}
       />
       {/* <TrashMarker coordinates={[-73.58781, 45.50884]} color={' #f56565'} />
       <TrashMarker coordinates={[-73.58781, 45.50984]} color={' #ECC94B'} />
       <TrashMarker coordinates={[-73.58731, 45.50894]} color={' #48BB78'} /> */}
       {montrealTrashData.map(trash => (
         <TrashMarker
+          handleOpen={handleOpen}
           key={trash.OBJECTID}
           coordinates={[trash.Long, trash.Lat]}
           color={colors[trash.fullness]}
@@ -99,13 +158,16 @@ export const Map = () => {
         />
       ))}
     </ReactMapboxGlMap>
+    </>
   );
 };
 
 const TrashMarker = props => {
   return (
     <Marker coordinates={props.coordinates} anchor="center">
-      <Dot color={props.color}>{props.text || ''}</Dot>
+      <div onClick={props.handleOpen}>
+        <Dot color={props.color}>{props.text || ''}</Dot>
+      </div>
     </Marker>
   );
 };
@@ -124,4 +186,9 @@ const Dot = styled.div`
   height: 18px;
   border-radius: 9999px;
   border: ${props => `5px solid ${props.color}`};
+`;
+
+const Percentage = styled.p`
+  padding-left: 8px;
+  font-weight: bold;
 `;
